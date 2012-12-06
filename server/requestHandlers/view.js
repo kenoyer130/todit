@@ -1,29 +1,46 @@
 var fs = require('fs');
 var settings = require('../settings')
 
+var views = {};
+
 function handler(path, response) {
 
-    fs.readFile(settings.WORKING_DIRECTORY + "/views/master.html", 'utf8', function (err, master) {
+    if (views.length == undefined)
+        loadViews();
+
+    fs.readFile(settings.WORKING_DIRECTORY + "/master.html", 'utf8', function (err, master) {
         if (err)
             return console.log(err);
 
-        var body = "";
+        var page = master;
 
-        if (path == "/")
-            path = "/index.html";
+        var myregexp = /{(.*?)}/g;
+        var view = myregexp.exec(master);
 
-        fs.readFile(settings.WORKING_DIRECTORY + "/views" + path, 'utf8', function (err, data) {
-            if (err)
-                return console.log(err);
+        while (view != null) {
+            view = myregexp.exec(master);
+            if (view == null)
+                continue;
 
-            writeOutputFile(master, data, response);
-        });
+            var body = views[view[1] + ".html"];
+            page = page.replace(view[0], body);
+        }
+
+        writeOutputFile(page, response);
     });
 }
 
-function writeOutputFile(master, data, response) {
+function loadViews() {
+    var files = fs.readdirSync(settings.WORKING_DIRECTORY);
 
-    var body = master.replace('{content}', data);
+    for (i = 0; i < files.length; i++) {
+        var file = files[i];
+        if (file.match(".html$") && !file.match("master.html$"))
+            views[file] = fs.readFileSync(settings.WORKING_DIRECTORY + "/" + files[i]);
+    }
+}
+
+function writeOutputFile(body, response) {
 
     response.writeHead(200, {"Content-Type":"text/html"});
     response.write(body);

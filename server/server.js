@@ -8,11 +8,11 @@ function start(route, handle) {
         var pathname = url.parse(request.url).pathname;
         var args = url.parse(request.url).p
 
-        if (!login.isLoggedIn(request, response) && pathname.indexOf("scripts") == -1
-            && pathname.indexOf(".js") == -1
-            && pathname.indexOf(".css") == -1
-            && pathname.indexOf("/api/validate") == -1)
-            pathname = "/login";
+        if (!login.isLoggedIn(request, response)
+            && !pathname.match(".js|.css")
+            && !pathname.match("^/api/validate$")) {
+                pathname = "/login";
+        }
 
         if (pathname.indexOf("favicon") > -1)
             return;

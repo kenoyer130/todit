@@ -2,14 +2,19 @@ var url = require('url')
 
 function route(handle, pathname, response, request) {
 
-    var root;
+    var root = "/";
 
-    var path = url.parse(pathname, false, true)
-
-    if ((path.pathname.match("\.js$") == ".js" || path.pathname.match("\.css$") == ".css") && path.pathname.indexOf("scripts") == -1)
-        root = "/viewResources";
+    if (pathname.match(".html$") || pathname == "/")
+        root = "/view";
+    else if (pathname.match("^/api/"))
+        root = "/api";
+    else if (pathname.match("^/login$"))
+        root = "/login"
     else
-        root = "/" + path.pathname.split('/')[1];
+        root = "/root"
+
+    if (pathname == "/")
+        pathname = "/index.html";
 
     console.log("About to route a request for " + root + " " + pathname);
 

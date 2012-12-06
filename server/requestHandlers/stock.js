@@ -3,7 +3,7 @@ var settings = require('../settings')
 
 function handler(path, response) {
 
-    fs.readFile(settings.WORKING_DIRECTORY + path+".html", 'utf8', function (err, content) {
+    fs.readFile(settings.WORKING_DIRECTORY + path, 'utf8', function (err, content) {
         if (err)
             return console.log(err);
         response.write(content);

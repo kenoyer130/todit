@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+    $("#btnLogin").button();
     $('#txtLogin').focus();
 
     $('#txtLogin, #txtPassword').keypress(function (e) {
@@ -11,6 +12,7 @@ $(document).ready(function () {
 
     ko.applyBindings(new LoginViewModel());
 });
+
 
 function LoginViewModel() {
     var self = this;

@@ -1,5 +1,4 @@
 var fs = require('fs');
-var settings = require("../settings.js");
 var http = require('http');
 var validate = require("../api/validate");
 
